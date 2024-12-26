@@ -3,19 +3,349 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 250, 250, 250;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground-rgb: 255, 255, 255;
+    --background-rgb: 23, 23, 23;
   }
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+}
+
+/* Suavizar transições */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-in,
+.animate-slide-in-left,
+.animate-slide-in-right {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+}
+
+.animate-slide-in-left {
+  transform: translateX(-50px);
+}
+
+.animate-slide-in-right {
+  transform: translateX(50px);
+}
+
+.is-visible {
+  opacity: 1 !important;
+  transform: translate(0, 0) !important;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+  perspective-origin: center;
+}
+
+.book-container {
+  height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.book {
+  width: 400px;
+  height: 500px;
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateY(0deg);
+  transition: transform 0.5s;
+}
+
+.book-page {
+  backface-visibility: hidden;
+  transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.book-page:hover {
+  transform: rotateY(45deg) scale(1.2) !important;
+  z-index: 100 !important;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.page-right {
+  transform-origin: left;
+  transform: rotateY(0) translateX(calc(var(--page-index) * 20px)) !important;
+}
+
+.page-left {
+  transform-origin: right;
+  transform: rotateY(0) translateX(calc(var(--page-index) * -20px)) !important;
+}
+
+/* Adicione um efeito de brilho quando hover */
+.book-page::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.book-page:hover::after {
+  opacity: 1;
+}
+
+/* Adicione estas classes para a galeria */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-gallery {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.gallery-item {
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out forwards, float 6s ease-in-out infinite;
+}
+
+.gallery-item:hover {
+  z-index: 10;
+}
+
+/* Efeito de hover suave nas imagens */
+.gallery-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gallery-item:hover::before {
+  opacity: 1;
+}
+
+/* Adicione uma animação de pulso sutil */
+@keyframes subtle-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+.gallery-item {
+  animation: subtle-pulse 2s infinite;
+}
+
+/* Atualize as animações da galeria */
+@keyframes fadeInStagger {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.grid > div {
+  animation: fadeInStagger 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.grid > div:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.grid > div:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.grid > div:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.grid > div:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.grid > div:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.grid > div:nth-child(6) {
+  animation-delay: 0.6s;
+}
+.grid > div:nth-child(7) {
+  animation-delay: 0.7s;
+}
+.grid > div:nth-child(8) {
+  animation-delay: 0.8s;
+}
+
+/* Adicione uma classe para controlar a saída suave */
+.animate-fade-in.is-hidden,
+.animate-slide-in-left.is-hidden,
+.animate-slide-in-right.is-hidden {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* Adicione estas novas classes e animações */
+.bg-warm-gradient {
+  background: linear-gradient(
+    135deg,
+    #fff5f5 0%,
+    #ffe4e4 25%,
+    #fff5f5 50%,
+    #ffe4e4 75%,
+    #fff5f5 100%
+  );
+  background-size: 400% 400%;
+  animation: warmGradient 15s ease infinite;
+}
+
+.bg-soft-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-soft-glow::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 228, 228, 0.4) 0%,
+    rgba(255, 245, 245, 0.1) 50%,
+    transparent 70%
+  );
+  animation: rotateGlow 20s linear infinite;
+}
+
+@keyframes warmGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes rotateGlow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Atualize as cores e transições existentes */
+.animate-fade-in,
+.animate-slide-in-left,
+.animate-slide-in-right {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Adicione um efeito de brilho suave nos cards */
+.card-glow {
+  position: relative;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 228, 228, 0.3);
+  transition: all 0.3s ease;
+}
+
+.card-glow:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px -5px rgba(255, 192, 192, 0.3);
+  border-color: rgba(255, 192, 192, 0.5);
 }
